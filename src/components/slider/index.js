@@ -8,7 +8,6 @@ function Slider (props) {
   const { bannerList } = props;
 
   useEffect (() => {
-    console.log("slider index")
     if (bannerList.length && !sliderSwiper){
         let newSliderSwiper = new Swiper(".slider-container", {
           loop: true,
