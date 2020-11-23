@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux'
+import { reducer as recommendReducer } from '../application/Recommend/store/index'
 
-// 测试用的子reducer
-const moduleReducer = (state={},action) => {
-	return state
-}
 
 export default combineReducers({
 	// 这里添加子reducer
-	moduleReducer
+	recommend: recommendReducer,
 })
