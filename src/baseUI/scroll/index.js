@@ -16,7 +16,8 @@ const Scroll = forwardRef((props, ref)=>{
 
 	const scrollContaninerRef = useRef()
 
-	const { direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom } = props;
+	// eslint-disable-next-line
+	const { direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom } = props; 
 	const { pullUp, pullDown, onScroll } = props;
 
 	// 创建better-scroll类实例对象
@@ -35,6 +36,7 @@ const Scroll = forwardRef((props, ref)=>{
 		return ()=> {
 			setBScroll(null)
 		}
+		// eslint-disable-next-line
 	},[])
 
 	// 每次重新渲染都要刷新实例，防止无法滑动
