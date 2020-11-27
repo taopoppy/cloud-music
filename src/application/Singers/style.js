@@ -47,8 +47,8 @@ export const ListItem = styled.div`
     }
   }
   .name {
-    font-size: ${style ["font-size-m"]};
-    color: ${style ["font-color-desc"]};
+    font-size: ${style["font-size-m"]};
+    color: ${style["font-color-desc"]};
     font-weight: 500;
   }
 `;

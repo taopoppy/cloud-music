@@ -40,12 +40,14 @@ const Scroll = forwardRef((props, ref) => {
 
   const { pullUp, pullDown, onScroll, pullUpLoading, pullDownLoading } = props;
 
+  // 上拉防抖处理
   let pullUpDebounce = useMemo(() => {
-    return debounce(pullUp, 300)
+    return debounce(pullUp, 500)
   }, [pullUp]);
 
+  // 下拉防抖处理
   let pullDownDebounce = useMemo(() => {
-    return debounce(pullDown, 300)
+    return debounce(pullDown, 500)
   }, [pullDown]);
 
   useEffect(() => {

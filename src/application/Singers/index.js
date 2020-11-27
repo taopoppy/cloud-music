@@ -1,4 +1,4 @@
-import React, {useState, useEffect,memo} from 'react';
+import React, {useState, useEffect, useCallback, memo} from 'react';
 import Horizen from '../../baseUI/horizen-item';
 import { singerType, singerArea, alphaTypes } from '../../api/config';
 import {
@@ -36,26 +36,34 @@ function Singers(props) {
     // eslint-disable-next-line
   }, []);
 
-  let handleUpdateAlpha = (val) => {
+  // 选择了字母的处理函数
+  let handleUpdateAlpha = useCallback((val) => {
     setAlpha(val);
     updateDispatch(singertype, singerarea, val);
-  };
+    // eslint-disable-next-line
+  },[setAlpha]);
 
-  let handleUpdateSingerArea = (val) => {
+  // 选择了地区的处理函数
+  let handleUpdateSingerArea = useCallback((val) => {
     setSingerArea(val);
     updateDispatch(singertype, val, alpha);
-  };
+    // eslint-disable-next-line
+  }, [setSingerArea]);
 
-  let handleUpdateSingerType = (val) => {
+  // 选择了歌手类型的处理函数
+  let handleUpdateSingerType = useCallback((val) => {
     setSingerType(val);
     updateDispatch(val,singerarea, alpha);
-  }
+    // eslint-disable-next-line
+  }, [setSingerType])
 
+  // 底部上拉加载更多
   const handlePullUp = () => {
-    let temp_hot = singertype === '' && singerarea === ''
+    let temp_hot = (singertype === '' && singerarea === '' && alpha === '')
     pullUpRefreshDispatch(singertype, singerarea, alpha, temp_hot, pageCount);
   };
 
+  // 顶部下拉重新加载
   const handlePullDown = () => {
     pullDownRefreshDispatch(singertype, singerarea, alpha);
   };
@@ -85,9 +93,9 @@ function Singers(props) {
   return (
     <div>
       <NavContainer>
-        <Horizen list={singerType} title={"歌手分类:"} handleClick={(val) => handleUpdateSingerType(val)} oldVal={singertype}></Horizen>
-        <Horizen list={singerArea} title={"地区分类:"} handleClick={(val) => handleUpdateSingerArea(val)} oldVal={singerarea}></Horizen>
-        <Horizen list={alphaTypes} title={"首字母:"} handleClick={val => handleUpdateAlpha(val)} oldVal={alpha}></Horizen>
+        <Horizen list={singerType} title={"歌手分类:"} handleClick={ handleUpdateSingerType} oldVal={singertype}></Horizen>
+        <Horizen list={singerArea} title={"地区分类:"} handleClick={handleUpdateSingerArea} oldVal={singerarea}></Horizen>
+        <Horizen list={alphaTypes} title={"首字母:"} handleClick={handleUpdateAlpha} oldVal={alpha}></Horizen>
       </NavContainer>
       <ListContainer>
         <Scroll
@@ -112,6 +120,7 @@ const mapStateToProps = (state) => ({
   pullDownLoading: state.singers.get('pullDownLoading'),
   pageCount: state.singers.get('pageCount')
 });
+
 const mapDispatchToProps = (dispatch) => {
   return {
     // 进入页面第一次加载热门歌手

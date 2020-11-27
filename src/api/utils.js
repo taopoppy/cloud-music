@@ -12,13 +12,17 @@ export const getCount = (count) => {
 // 防抖函数
 export const debounce = (func, delay) => {
   let timer;
+  console.log("debouse => this", this)
   return function (...args) {
+    console.log("niming => this", this)
     if (timer) {
-      clearTimeout (timer);
+      console.log("time")
+      clearTimeout(timer);
     }
     timer = setTimeout (() => {
-      func.apply (this, args);
-      clearTimeout (timer);
+      console.log("setTime => this", this)
+      func(...args)
+      clearTimeout(timer);
     }, delay);
   }
 }
