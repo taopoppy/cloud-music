@@ -44,9 +44,9 @@ function Recommend(props) {
 
 const mapStateToProps = (state) => ({
   // 这里没有使用toJS，不然每次diff比对props的时候都是不一样的引用，还是导致不必要的重渲染，属于滥用 immutable
-  bannerList: state.recommend.get('bannerList'),
-  recommendList: state.recommend.get('recommendList'),
-  enterLoading: state.recommend.get('enterLoading')
+  bannerList: state.getIn(['recommend','bannerList']),
+  recommendList: state.getIn(['recommend','recommendList']),
+  enterLoading: state.getIn(['recommend','enterLoading'])
 })
 
 const mapDispatchToProps = (dispatch) => {

@@ -12,13 +12,18 @@ import routes from './routes/index.js'
 import { Provider } from 'react-redux'
 import store from './store/index.js'
 
+// 引入context全局
+import { Data } from './application/Singers/data.js'
+
 function App () {
   return (
     <Provider store={store}>
       <HashRouter>
         <GlobalStyle></GlobalStyle>
         <IconStyle></IconStyle>
-        { renderRoutes(routes) }
+        <Data>
+          { renderRoutes(routes) }
+        </Data>
       </HashRouter>
     </Provider>
   );

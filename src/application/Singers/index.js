@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, memo} from 'react';
+import React, {useEffect, useCallback, memo, useContext} from 'react';
 import Horizen from '../../baseUI/horizen-item';
 import { singerType, singerArea, alphaTypes } from '../../api/config';
 import {
@@ -21,51 +21,54 @@ import  LazyLoad, {forceCheck} from 'react-lazyload';
 import Scroll from './../../baseUI/scroll/index';
 import {connect} from 'react-redux';
 import Loading from '../../baseUI/loading';
+import { CategoryDataContext, CHANGE_TYPE, CHANGE_AREA, CHANGE_ALPHA } from './data.js'
 
 function Singers(props) {
-  let [singertype, setSingerType] = useState('');
-  let [singerarea, setSingerArea] = useState('');
-  let [alpha, setAlpha] = useState('');
-
   const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
 
   const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
 
+  const { data, dispatch  } = useContext(CategoryDataContext)
+
+  const { singertype, singerarea, singeralpha } = data.toJS()
+
   useEffect(() => {
-    getHotSingerDispatch();
+    if(!singerList.size) {
+      getHotSingerDispatch();
+    }
     // eslint-disable-next-line
   }, []);
 
   // 选择了字母的处理函数
   let handleUpdateAlpha = useCallback((val) => {
-    setAlpha(val);
+    dispatch({type: CHANGE_ALPHA, data: val})
     updateDispatch(singertype, singerarea, val);
     // eslint-disable-next-line
-  },[setAlpha]);
+  },[dispatch]);
 
   // 选择了地区的处理函数
   let handleUpdateSingerArea = useCallback((val) => {
-    setSingerArea(val);
-    updateDispatch(singertype, val, alpha);
+    dispatch({type: CHANGE_AREA, data: val})
+    updateDispatch(singertype, val, singeralpha);
     // eslint-disable-next-line
-  }, [setSingerArea]);
+  }, [dispatch]);
 
   // 选择了歌手类型的处理函数
   let handleUpdateSingerType = useCallback((val) => {
-    setSingerType(val);
-    updateDispatch(val,singerarea, alpha);
+    dispatch({type: CHANGE_TYPE, data: val})
+    updateDispatch(val,singerarea, singeralpha);
     // eslint-disable-next-line
-  }, [setSingerType])
+  }, [dispatch])
 
   // 底部上拉加载更多
   const handlePullUp = () => {
-    let temp_hot = (singertype === '' && singerarea === '' && alpha === '')
-    pullUpRefreshDispatch(singertype, singerarea, alpha, temp_hot, pageCount);
+    let temp_hot = (singertype === '' && singerarea === '' && singeralpha === '')
+    pullUpRefreshDispatch(singertype, singerarea, singeralpha, temp_hot, pageCount);
   };
 
   // 顶部下拉重新加载
   const handlePullDown = () => {
-    pullDownRefreshDispatch(singertype, singerarea, alpha);
+    pullDownRefreshDispatch(singertype, singerarea, singeralpha);
   };
 
   const renderSingerList = () => {
@@ -95,7 +98,7 @@ function Singers(props) {
       <NavContainer>
         <Horizen list={singerType} title={"歌手分类:"} handleClick={ handleUpdateSingerType} oldVal={singertype}></Horizen>
         <Horizen list={singerArea} title={"地区分类:"} handleClick={handleUpdateSingerArea} oldVal={singerarea}></Horizen>
-        <Horizen list={alphaTypes} title={"首字母:"} handleClick={handleUpdateAlpha} oldVal={alpha}></Horizen>
+        <Horizen list={alphaTypes} title={"首字母:"} handleClick={handleUpdateAlpha} oldVal={singeralpha}></Horizen>
       </NavContainer>
       <ListContainer>
         <Scroll
@@ -114,11 +117,11 @@ function Singers(props) {
 }
 
 const mapStateToProps = (state) => ({
-  singerList: state.singers.get('singerList'),
-  enterLoading: state.singers.get('enterLoading'),
-  pullUpLoading: state.singers.get('pullUpLoading'),
-  pullDownLoading: state.singers.get('pullDownLoading'),
-  pageCount: state.singers.get('pageCount')
+  singerList: state.getIn(['singers','singerList']),
+  enterLoading: state.getIn(['singers','enterLoading']),
+  pullUpLoading: state.getIn(['singers','pullUpLoading']),
+  pullDownLoading: state.getIn(['singers','pullDownLoading']),
+  pageCount: state.getIn(['singers','pageCount'])
 });
 
 const mapDispatchToProps = (dispatch) => {

@@ -19,3 +19,8 @@ export const getHotSingerListRequest = (count) => {
 export const getSingerListRequest= (type, area, alpha, count) => {
   return axiosInstance.get(`/artist/list?type=${type}&area=${area}&initial=${alpha? alpha.toLowerCase(): ''}&offset=${count * 30}`);
 }
+
+// 排行榜内容摘要
+export const getRankListRequest = () => {
+  return axiosInstance.get (`/toplist/detail`);
+};

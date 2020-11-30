@@ -47,7 +47,7 @@ function Horizen(props) {
 		Array.from(tagElems).forEach(ele => {
 			totalWidth += ele.offsetWidth
 		})
-		categoryDOM.style.width = `${totalWidth}px`
+		categoryDOM.style.width = `${totalWidth + 8}px`
 	}, [])
 
 	return (
