@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, memo, useContext} from 'react';
+import React, {useEffect, useCallback, memo, useContext, useRef} from 'react';
 import Horizen from '../../baseUI/horizen-item';
 import { singerType, singerArea, alphaTypes } from '../../api/config';
 import {
@@ -6,6 +6,7 @@ import {
   ListContainer,
   List,
   ListItem,
+  BackTop,
 } from "./style";
 import {
   getSingerList,
@@ -32,6 +33,8 @@ function Singers(props) {
 
   const { singertype, singerarea, singeralpha } = data.toJS()
 
+  const scrollContaninerRef = useRef()
+
   useEffect(() => {
     if(!singerList.size) {
       getHotSingerDispatch();
@@ -43,28 +46,36 @@ function Singers(props) {
   let handleUpdateAlpha = useCallback((val) => {
     dispatch({type: CHANGE_ALPHA, data: val})
     updateDispatch(singertype, singerarea, val);
+    scrollContaninerRef.current.refresh()
     // eslint-disable-next-line
-  },[dispatch]);
+  },[dispatch,singertype, singerarea]);
 
   // 选择了地区的处理函数
   let handleUpdateSingerArea = useCallback((val) => {
     dispatch({type: CHANGE_AREA, data: val})
     updateDispatch(singertype, val, singeralpha);
+    scrollContaninerRef.current.refresh()
     // eslint-disable-next-line
-  }, [dispatch]);
+  }, [dispatch,singertype,singeralpha]);
 
   // 选择了歌手类型的处理函数
   let handleUpdateSingerType = useCallback((val) => {
     dispatch({type: CHANGE_TYPE, data: val})
     updateDispatch(val,singerarea, singeralpha);
+    scrollContaninerRef.current.refresh()
     // eslint-disable-next-line
-  }, [dispatch])
+  }, [dispatch,singerarea,singeralpha])
 
   // 底部上拉加载更多
   const handlePullUp = () => {
     let temp_hot = (singertype === '' && singerarea === '' && singeralpha === '')
     pullUpRefreshDispatch(singertype, singerarea, singeralpha, temp_hot, pageCount);
   };
+
+  // 动画回到顶部
+  const goBackTop = useCallback(() => {
+    scrollContaninerRef.current.backtopWithAnimition()
+  }, [scrollContaninerRef])
 
   // 顶部下拉重新加载
   const handlePullDown = () => {
@@ -102,6 +113,7 @@ function Singers(props) {
       </NavContainer>
       <ListContainer>
         <Scroll
+          ref={scrollContaninerRef}
           pullUp={ handlePullUp } // 上拉加载逻辑
           pullDown = { handlePullDown } // 下拉加载逻辑
           pullUpLoading = { pullUpLoading } // 显示上拉loading动画与否
@@ -112,6 +124,7 @@ function Singers(props) {
         </Scroll>
         <Loading show={enterLoading}></Loading>
       </ListContainer>
+      <BackTop onClick={ goBackTop }><span>︽</span></BackTop>
     </div>
   )
 }

@@ -60,3 +60,27 @@ export const EnterLoading = styled.div`
   height: 100px;
   margin: auto;
 `
+
+export const BackTop = styled.div`
+  position: fixed;
+  bottom: 30px; right: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  margin: auto;
+  font-size: larger;
+  font-weight: bolder;
+  color: ${style["font-color-light"]};
+  background-color: ${style["theme-color"]};
+  box-shadow: ${style["theme-color-shadow"]};
+  &:active {
+    color: ${style["font-color-desc"]};
+  }
+  >span {
+    position:relative;
+    top: -5px;
+  }
+`

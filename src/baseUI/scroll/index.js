@@ -112,12 +112,31 @@ const Scroll = forwardRef((props, ref) => {
   });
 
   useImperativeHandle(ref, () => ({
+    // 更新回到顶部
     refresh() {
       if(bScroll) {
         bScroll.refresh();
         bScroll.scrollTo(0, 0);
       }
     },
+    // 动画回到顶部
+    backtopWithAnimition() {
+      if(bScroll) {
+        let nowY = bScroll.y
+        let step = nowY / 50
+        let scrollInterval = setInterval(() => {
+          nowY = nowY - step
+          // console.log(nowY)
+          if(nowY < 0) {
+            bScroll.scrollTo(0, nowY)
+          } else {
+            bScroll.scrollTo(0, 0)
+            clearInterval(scrollInterval)
+          }
+        }, 10)
+      }
+    },
+    // 拿到bs实例
     getBScroll() {
       if(bScroll) {
         return bScroll;

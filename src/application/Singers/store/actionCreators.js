@@ -61,8 +61,8 @@ export const getHotSingerList = () => {
 // 加载更多热门歌手
 export const refreshMoreHotSingerList = () => {
   return (dispatch, getState) => {
-    const pageCount = getState().singers.get('pageCount');
-    const singerList = getState().singers.get('singerList').toJS();
+    const pageCount = getState().getIn(['singers','pageCount']);
+    const singerList = getState().getIn(['singers','singerList']).toJS();
     getHotSingerListRequest(pageCount).then(res => {
       const data = [...singerList, ...res.artists];
       dispatch(changeSingerList(data));
@@ -90,8 +90,8 @@ export const getSingerList = (type, area, alpha) => {
 //加载更多歌手
 export const refreshMoreSingerList = (type, area, alpha) => {
   return (dispatch, getState) => {
-    const pageCount = getState().singers.get('pageCount');
-    const singerList = getState().singers.get('singerList').toJS();
+    const pageCount = getState().getIn(['singers','pageCount']);
+    const singerList = getState().getIn(['singers','singerList']).toJS();
     getSingerListRequest(type, area, alpha, pageCount).then(res => {
       const data = [...singerList, ...res.artists];
       dispatch(changeSingerList(data));

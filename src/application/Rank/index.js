@@ -36,7 +36,7 @@ function Rank(props) {
       if(idx === null) {
         alert("暂无相关数据");
         return;
-      } 
+      }
   }
   const renderSongList = (list) => {
     return list.length ? (
@@ -65,7 +65,7 @@ function Rank(props) {
             </ListItem>
           )
        })
-      } 
+      }
       </List>
     )
   }
@@ -81,7 +81,7 @@ function Rank(props) {
             { renderRankList(globalList, true) }
           { loading ? <EnterLoading><Loading></Loading></EnterLoading> : null }
         </div>
-      </Scroll> 
+      </Scroll>
       {renderRoutes(props.route.routes)}
     </Container>
     );
