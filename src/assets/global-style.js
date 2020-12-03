@@ -1,3 +1,5 @@
+import { keyframes } from "styled-components"
+
 // 扩大可点击区域
 const extendClick = () => {
   return `
@@ -17,6 +19,39 @@ const noWrap = () => {
     white-space: nowrap;
   `
 }
+
+export const backInDown = keyframes`
+0% {
+  transform: translateY(-1200px) scale(1);
+  opacity: 0.7;
+}
+
+80% {
+  transform: translateY(0px) scale(1);
+  opacity: 0.7;
+}
+
+100% {
+  transform: scale(1);
+  opacity: 1;
+}
+`
+export const backOutDown = keyframes`
+0% {
+  transform: scale(1);
+  opacity: 1;
+}
+
+20% {
+  transform: translateY(0px) scale(1);
+  opacity: 0.7;
+}
+
+100% {
+  transform: translateY(700px) scale(1);
+  opacity: 0;
+}
+`
 
 export default {
   'theme-color': '#d44439',
