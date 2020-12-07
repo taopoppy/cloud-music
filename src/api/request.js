@@ -24,3 +24,8 @@ export const getSingerListRequest= (type, area, alpha, count) => {
 export const getRankListRequest = () => {
   return axiosInstance.get (`/toplist/detail`);
 };
+
+// 歌单详情内容
+export const getAlbumDetailRequest = (id) => {
+  return axiosInstance.get(`/playlist/detail?id=${id}`)
+}
