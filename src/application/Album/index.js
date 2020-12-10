@@ -25,7 +25,8 @@ function Album(props) {
 		return () => {
 			deleteAblumCacheFromRedux()
 		}
-	}, [getAlbumDataDispatch, id, deleteAblumCacheFromRedux]);
+		// eslint-disable-next-line
+	}, []);
 
 	let currentAlbum = currentAlbumImmutable.toJS();
 

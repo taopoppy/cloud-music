@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useCallback, useImperativeHandle } from 'react';
 import { SongList, SongItem } from "./style";
 import { getName } from '../../api/utils';
-
+import PlayAll from '../../baseUI/playall/index.js'
 const SongsList = React.forwardRef((props, refs)=> {
 
   const { collectCount, showCollect, songs } = props;
 
   const totalCount = songs.length;
 
-  const selectItem = (e, index) => {
+  const selectItem = useCallback((e, index) => {
     console.log(index);
-  }
+  }, [])
+
+  useImperativeHandle(refs, () => ({
+    // 向外暴露Singlist的selectItem方法
+    playAllButtonClick(e) {
+      selectItem(e, 0)
+    }
+  }));
 
   let songList = (list) => {
     let res = [];
@@ -31,23 +38,14 @@ const SongsList = React.forwardRef((props, refs)=> {
     return res;
   };
 
-  const collect = (count) => {
-    return  (
-      <div className="add_list">
-        <i className="iconfont">&#xe62d;</i>
-        <span>收藏({Math.floor(count/1000)/10}万)</span>
-      </div>
-    )
-  };
   return (
     <SongList ref={refs} showBackground={props.showBackground}>
-      <div className="first_line">
-        <div className="play_all" onClick={(e) => selectItem(e, 0)}>
-          <i className="iconfont">&#xe6e3;</i>
-          <span>播放全部 <span className="sum">(共{totalCount}首)</span></span>
-        </div>
-        { showCollect ? collect(collectCount) : null}
-      </div>
+      <PlayAll
+        totalCount={totalCount}
+        showCollect={showCollect}
+        collectCount={collectCount}
+        selectItem={selectItem}
+      />
       <SongItem>
         { songList(songs) }
       </SongItem>

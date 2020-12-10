@@ -99,3 +99,12 @@ export const BgLayer = styled.div`
   border-radius: 10px;
   z-index: 50;
 `
+
+export const PlayAllPartWrapper = styled.div`
+  position: fixed;
+  top: 42px;
+  z-index: 100;
+  width: 100%;
+  background: white;
+  display: none;
+`

@@ -1,3 +1,5 @@
 export const CHANGE_ARTIST = 'singer/CHANGE_ARTIST';
 export const CHANGE_SONGS_OF_ARTIST = 'singer/CHANGE_SONGS_OF_ARTIST';
 export const CHANGE_ENTER_LOADING = 'singer/CHNAGE_ENTER_LOADING';
+export const DELETE_ARTIST = 'singer/DELETE_ENTER_LOADING'
+export const DELETE_SONGS_OF_ARTIST = 'singer/DELETE_SONGS_OF_ARTIST'
