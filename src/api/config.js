@@ -14,6 +14,13 @@ axiosInstance.interceptors.response.use(
 	}
 )
 
+// 播放的模式
+export const playMode = {
+  sequence: 0, // 顺序播放
+  loop: 1, // 单曲循环
+  random: 2 // 随机播放
+};
+
 //顶部的高度
 export const HEADER_HEIGHT = 45;
 

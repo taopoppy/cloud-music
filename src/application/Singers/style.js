@@ -63,12 +63,12 @@ export const EnterLoading = styled.div`
 
 export const BackTop = styled.div`
   position: fixed;
-  bottom: 30px; right: 30px;
+  bottom: 60px; right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 25px;
   margin: auto;
   font-size: larger;

@@ -2,7 +2,7 @@ import React from 'react'
 import { renderRoutes } from 'react-router-config'
 import { Top, Tab, TabItem } from './style.js'
 import { NavLink } from 'react-router-dom';
-
+import Player from '../Player/index.js'
 function Home(props) {
 	const { route } = props
 
@@ -19,6 +19,7 @@ function Home(props) {
 				<NavLink to="/rank" activeClassName="selected"><TabItem><span>排行榜</span></TabItem></NavLink>
 			</Tab>
 			{renderRoutes(route.routes)}
+			<Player></Player>
 		</div>
 	)
 }
