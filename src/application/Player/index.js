@@ -9,13 +9,33 @@ import {
   changePlayMode,
   changeFullScreen
 } from "./store/actionCreators";
+import MiniPlayer from './miniPlayer/index.js'
+import NormalPlayer from './normalPlayer/index.js'
 
 function Player(props) {
+  const currentSong = {
+    al: { picUrl: "https://p1.music.126.net/JL_id1CFwNJpzgrXwemh4Q==/109951164172892390.jpg" },
+    name: "木偶人",
+    ar: [{name: "薛之谦"}]
+  }
+  const { fullScreen } = props
+  const { toggleFullScreenDispatch } = props
+
 	return(
-		<div>Player</div>
+		<div>
+      <MiniPlayer
+        song={currentSong}
+        fullScreen={fullScreen}
+        toggleFullScreen={toggleFullScreenDispatch}
+      />
+      <NormalPlayer
+        song={currentSong}
+        fullScreen={fullScreen}
+        toggleFullScreen={toggleFullScreenDispatch}
+      />
+    </div>
 	)
 }
-
 
 const mapStateToProps = state => ({
   fullScreen: state.getIn (["player", "fullScreen"]),
@@ -30,26 +50,27 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    togglePlayingDispatch (data) {
-      dispatch (changePlayingState (data));
+    togglePlayingDispatch(data) {
+      dispatch(changePlayingState(data));
     },
-    toggleFullScreenDispatch (data) {
-      dispatch (changeFullScreen (data));
+    // 派发是否全屏播放的action
+    toggleFullScreenDispatch(data) {
+      dispatch(changeFullScreen(data));
     },
-    togglePlayListDispatch (data) {
-      dispatch (changeShowPlayList (data));
+    togglePlayListDispatch(data) {
+      dispatch(changeShowPlayList(data));
     },
-    changeCurrentIndexDispatch (index) {
-      dispatch (changeCurrentIndex (index));
+    changeCurrentIndexDispatch(index) {
+      dispatch(changeCurrentIndex(index));
     },
-    changeCurrentDispatch (data) {
-      dispatch (changeCurrentSong (data));
+    changeCurrentDispatch(data) {
+      dispatch(changeCurrentSong(data));
     },
-    changeModeDispatch (data) {
-      dispatch (changePlayMode (data));
+    changeModeDispatch(data) {
+      dispatch(changePlayMode(data));
     },
     changePlayListDispatch (data) {
-      dispatch (changePlayList (data));
+      dispatch(changePlayList (data));
     }
   };
 };

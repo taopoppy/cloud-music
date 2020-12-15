@@ -36,7 +36,7 @@ export const filterIndex = rankList => {
 
 //找出排行榜的编号
 export const filterIdx = name => {
-  for (var key in RankTypes) {
+  for(var key in RankTypes) {
     if (RankTypes[key] === name) return key;
   }
   return null;
@@ -45,7 +45,7 @@ export const filterIdx = name => {
 // 处理歌手列表拼接歌手名字
 export const getName = list => {
   let str = "";
-  list.map ((item, index) => {
+  list.map((item, index) => {
     str += index === 0 ? item.name : "/" + item.name;
     return item;
   });
@@ -54,3 +54,32 @@ export const getName = list => {
 
 //判断一个对象是否为空
 export const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
+
+let elementStyle = document.createElement ("div").style;
+
+let vendor = (() => {
+  // 首先通过 transition 属性判断是何种浏览器
+  let transformNames = {
+    webkit: "webkitTransform",
+    Moz: "MozTransform",
+    O: "OTransfrom",
+    ms: "msTransform",
+    standard: "Transform"
+  };
+  for(var key in transformNames) {
+    if (elementStyle[transformNames[key]] !== undefined) {
+      return key;
+    }
+  }
+  return false;
+})();
+
+export function prefixStyle(style) {
+  if (vendor === false) {
+    return false;
+  }
+  if (vendor === "standard") {
+    return style;
+  }
+  return vendor + style.charAt(0).toUpperCase() + style.substr(1);
+}
