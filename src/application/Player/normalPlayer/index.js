@@ -2,8 +2,9 @@ import React,{ memo, useCallback, useRef } from "react";
 import {  getName } from "../../../api/utils";
 import { CSSTransition } from 'react-transition-group'
 import animations from 'create-keyframe-animation'
-import { prefixStyle } from '../../../api/utils'
+import { prefixStyle, formatPlayTime } from '../../../api/utils'
 import  ProgressBar from '../../../baseUI/progress-bar/index'
+import { playMode } from '../../../api/config'
 
 import {
   NormalPlayerContainer,
@@ -16,8 +17,10 @@ import {
 } from "./style";
 
 function NormalPlayer(props) {
-	const { song, fullScreen } = props;
-	const { toggleFullScreen } = props
+	// 歌曲信息，是否全屏，播放状态，播放进度百分比，总时长，当前播放到什么时间,播放模式
+	const { song, fullScreen, playing, percent, duration, currentTime,mode } = props;
+	// 修改全屏，点击播放或者暂停， 拖动进度条, 上一首歌曲点击事件，下一首歌曲点击事件
+	const { toggleFullScreen,clickPlaying, onProgressChange, handlePrev, handleNext, changeMode } = props
 
 	const normalPlayerRef = useRef();
 	const cdWrapperRef = useRef();
@@ -97,6 +100,18 @@ function NormalPlayer(props) {
 		normalPlayerRef.current.style.display = "none";
 	};
 
+	// 根据传入mode决定显示icon
+	const getPlayMode = () => {
+		let content;
+		if (mode === playMode.sequence) {
+			content = "&#xe625;";
+		} else if (mode === playMode.loop) {
+			content = "&#xe653;";
+		} else {
+			content = "&#xe61b;";
+		}
+		return content;
+	};
 
   return (
 		<CSSTransition
@@ -112,6 +127,7 @@ function NormalPlayer(props) {
 			<NormalPlayerContainer ref={normalPlayerRef}>
 				<div className="background">
 					<img
+						className={`play ${playing? "": "pause"}`}
 						src={song.al.picUrl + "?param=300x300"}
 						width="100%"
 						height="100%"
@@ -139,26 +155,36 @@ function NormalPlayer(props) {
 				</Middle>
 				<Bottom className="bottom">
 					<ProgressWrapper>
-						<span className="time time-l">0:00</span>
+						<span className="time time-l">{formatPlayTime(currentTime)}</span>
 						<div className="progress-bar-wrapper">
 							<ProgressBar
-								percent={0.2}
-								percentChange={(curPercent)=> {console.log(curPercent)}}
+								percent={percent}
+								percentChange={onProgressChange}
 							></ProgressBar>
 						</div>
-						<span className="time time-r">4:17</span>
+						<div className="time time-r">{formatPlayTime(duration)}</div>
 					</ProgressWrapper>
 					<Operators>
-						<div className="icon i-left" >
-							<i className="iconfont">&#xe625;</i>
+						<div className="icon i-left" onClick={changeMode}>
+							<i
+								className="iconfont"
+								dangerouslySetInnerHTML={{ __html: getPlayMode()}}
+							></i>
 						</div>
-						<div className="icon i-left">
+						<div className="icon i-left" onClick={handlePrev}>
 							<i className="iconfont">&#xe6e1;</i>
 						</div>
 						<div className="icon i-center">
-							<i className="iconfont">&#xe723;</i>
+							<i
+								className="iconfont"
+								onClick={e => clickPlaying(e, !playing)}
+								// dangerouslySetInnerHTML是React用來替代DOM的innerHTML
+								dangerouslySetInnerHTML={{
+									__html: playing ? "&#xe723;" : "&#xe731;"
+								}}
+							></i>
 						</div>
-						<div className="icon i-right">
+						<div className="icon i-right" onClick={handleNext}>
 							<i className="iconfont">&#xe718;</i>
 						</div>
 						<div className="icon i-right">

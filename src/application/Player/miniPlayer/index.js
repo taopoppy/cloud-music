@@ -5,8 +5,12 @@ import { CSSTransition } from 'react-transition-group'
 import ProgressCircle from '../../../baseUI/progress-circle/index.js'
 
 function MiniPlayer (props) {
-	const { song, fullScreen } = props;
-	const { toggleFullScreen } = props
+  // song是当前播放歌曲信息， fullScreen是当前是否为全屏模式，playing是当前播放状态，percent是播放进度数据
+  const { song, fullScreen, playing, percent  } = props; 
+  // 切换mini屏和全屏的函数
+  const { toggleFullScreen } = props
+  // clickPlaying是mini播放器当中的播放和暂停的按钮点击函数
+  const { clickPlaying, setFullScreen } = props;
 	const miniPlayerRef = useRef();
 
   return (
@@ -24,7 +28,7 @@ function MiniPlayer (props) {
       <MiniPlayerContainer ref={miniPlayerRef} onClick={() => toggleFullScreen(true)}>
         <div className="icon">
           <div className="imgWrapper">
-            <img className="play" src={song.al.picUrl} width="40" height="40" alt="img"/>
+            <img className={`play ${playing? "": "pause"}`} src={song.al.picUrl} width="40" height="40" alt="img"/>
           </div>
         </div>
         <div className="text">
@@ -32,8 +36,12 @@ function MiniPlayer (props) {
           <p className="desc">{getName(song.ar)}</p>
         </div>
         <div className="control">
-          <ProgressCircle radius={32} percent={0.5}>
-            <i className="icon-mini iconfont icon-pause">&#xe650;</i>
+          <ProgressCircle radius={32} percent={percent}>
+          { playing ?
+            <i className="icon-mini iconfont icon-pause" onClick={e => clickPlaying(e, false)}>&#xe650;</i>
+            :
+            <i className="icon-mini iconfont icon-play" onClick={e => clickPlaying(e, true)}>&#xe61e;</i>
+          }
           </ProgressCircle>
         </div>
         <div className="control">

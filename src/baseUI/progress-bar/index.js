@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState, memo} from 'react';
 import styled from'styled-components';
 import style from '../../assets/global-style';
 import { prefixStyle } from '../../api/utils';
+const transform = prefixStyle('transform')
 
 const ProgressBarWrapper = styled.div`
   height: 30px;
@@ -38,19 +39,33 @@ const ProgressBarWrapper = styled.div`
 
 function ProgressBar(props) {
   const { percentChange } = props // 进度条进度发生变化所要调用的父组件传递的回调函数
+  const { percent } = props
 
   const progressBar = useRef()
   const progress = useRef()
   const progressBtn = useRef()
   const [ touch, setTouch ] = useState({})
 
+
+
+  //监听percent的变化，进度条跟着变长
+  useEffect(() => {
+    if(percent >= 0 && percent <= 1 && !touch.initiated) {
+      const barWidth = progressBar.current.clientWidth;
+      const offsetWidth = percent * barWidth;
+      progress.current.style.width = `${offsetWidth}px`;
+      progressBtn.current.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`;
+    }
+    // eslint-disable-next-line
+  }, [percent]);
+
+
+  // 进度条回传给父组件
   const _changePercent = () => {
     const barWidth = progressBar.current.clientWidth; // 拿到纯进度条的长度
     const curPercent = progress.current.clientWidth/barWidth; // 新的进度百分比计算
     percentChange(curPercent);// 把新的进度传给回调函数并执行
   }
-
-
 
   // 根据偏移量修改进度条和按钮的位置
   const _offset = (offsetWidth) => {
