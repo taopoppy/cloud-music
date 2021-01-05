@@ -27,7 +27,7 @@ import { renderRoutes } from 'react-router-config'
 
 
 function Singers(props) {
-  const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
+  const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount, songsCount } = props;
 
   const { getHotSingerDispatch, updateDispatch, pullDownRefreshDispatch, pullUpRefreshDispatch } = props;
 
@@ -119,7 +119,7 @@ function Singers(props) {
         <Horizen list={singerArea} title={"地区分类:"} handleClick={handleUpdateSingerArea} oldVal={singerarea}></Horizen>
         <Horizen list={alphaTypes} title={"首字母:"} handleClick={handleUpdateAlpha} oldVal={singeralpha}></Horizen>
       </NavContainer>
-      <ListContainer>
+      <ListContainer play={songsCount}>
         <Scroll
           ref={scrollContaninerRef}
           pullUp={ handlePullUp } // 上拉加载逻辑
@@ -143,7 +143,9 @@ const mapStateToProps = (state) => ({
   enterLoading: state.getIn(['singers','enterLoading']),
   pullUpLoading: state.getIn(['singers','pullUpLoading']),
   pullDownLoading: state.getIn(['singers','pullDownLoading']),
-  pageCount: state.getIn(['singers','pageCount'])
+  pageCount: state.getIn(['singers','pageCount']),
+  // 根据当前playList的长度来判断底部bottom是否要给mini播放器腾出位置
+  songsCount: state.getIn(['player','playList']).size
 });
 
 const mapDispatchToProps = (dispatch) => {

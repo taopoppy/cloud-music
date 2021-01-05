@@ -18,6 +18,7 @@ import { playMode } from '../../api/config'
 function Player(props) {
   const audioRef = useRef()
   const toastRef = useRef()
+  const songReady = useRef(true) // 解决歌曲是否能开始播放
 
   const {
     fullScreen, // 歌曲播放是否是全屏状态
@@ -26,7 +27,7 @@ function Player(props) {
     currentSong: immutableCurrentSong, // 当前播放信息
     playList: immutablePlayList, // 播放列表
     mode, // 播放模式
-    sequencePlayList:immutableSequencePlayList,//顺序列表
+    sequencePlayList:immutableSequencePlayList,// 顺序列表
   } = props
   const {
     toggleFullScreenDispatch, // 改变fullScreen
@@ -56,22 +57,21 @@ function Player(props) {
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
 
-  //记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
+  // 记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
   const [preSong, setPreSong] = useState({});
 
-  //先mock一份currentIndex
-  useEffect(() => {
-    changeCurrentIndexDispatch(0);
-  }, [])
-
   useEffect(()=> {
-    if (!playList.length || currentIndex === -1 || !playList[currentIndex] || playList[currentIndex].id === preSong.id ) return;
+    if (!playList.length || currentIndex === -1 || !playList[currentIndex] || playList[currentIndex].id === preSong.id || !songReady.current) return;
     let current = playList[currentIndex];
-    changeCurrentDispatch(current);//赋值currentSong
     setPreSong(current);
+    songReady.current = false; // 把标志位置为 false, 表示现在新的资源没有缓冲完成，不能切歌
+    changeCurrentDispatch(current);// 赋值currentSong
     audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
-      audioRef.current.play();
+      // 注意，play方法返回的是一个promise 对象
+      audioRef.current.play().then(() => {
+        songReady.current = true;
+      });
     });
     togglePlayingDispatch(true); // 播放状态
     setCurrentTime(0); // 从头开始播放
@@ -135,7 +135,7 @@ function Player(props) {
       return
     }
     // 播放列表当中的下一首
-    let index = currentIndex - 1
+    let index = currentIndex + 1
     if(index === playList.length) {
       // 当前播放歌曲如果是最后一首，下一首就应该是播放列表的第一首
       index = 0
@@ -181,6 +181,12 @@ function Player(props) {
     }
   }
 
+  // 播放器出错的处理函数
+  const handleError = () => {
+    songReady.current = true;
+    alert ("播放出错");
+  };
+
 	return(
 		<div>
       {
@@ -216,6 +222,7 @@ function Player(props) {
         ref={audioRef}
         onTimeUpdate={updateTime} // 播放器一直播放就会更新时间
         onEnded={handleEnd} // 播放器播放完毕一首歌的处理函数
+        onError={handleError} // 播放出错的处理函数
       />
       <Toast text={modeText} ref={toastRef}></Toast>
     </div>

@@ -10,15 +10,25 @@ import { connect } from 'react-redux';
 import Loading from "./../../baseUI/loading/index";
 import { getSingerInfo, changeEnterLoading, deleteArtist, deleteSongs } from "./store/actionCreators";
 import PlayAll from '../../baseUI/playall/index.js'
+import MusicNote from "../../baseUI/music-note/index";
 
 function Singer(props) {
   const initialHeight = useRef(0);
+
+  // 音符
+  const musicNoteRef = useRef();
+  const musicAnimation = (x, y) => {
+    musicNoteRef.current.startAnimation({ x, y });
+  };
+
+
   const [showStatus, setShowStatus] = useState(true);
 
   const {
     artist: immutableArtist,
     songs: immutableSongs,
     loading,
+    songsCount
   } = props;
 
   const { getSingerDataDispatch, deleteSingerCacheFromRedux } = props;
@@ -119,7 +129,7 @@ function Singer(props) {
       unmountOnExit
       onExited={() => props.history.goBack()}
     >
-      <Container>
+      <Container play={songsCount}>
         <Header
           handleClick={setShowStatusFalse}
           title={artist.name}
@@ -147,10 +157,12 @@ function Singer(props) {
               ref={songList}
               songs={songs}
               showCollect={false}
+              musicAnimation={musicAnimation}
             ></SongsList>
           </Scroll>
         </SongListWrapper>
         { loading ? (<Loading></Loading>) : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   )
@@ -161,6 +173,8 @@ const mapStateToProps = state => ({
   artist: state.getIn(["singerInfo", "artist"]),
   songs: state.getIn(["singerInfo", "songsOfArtist"]),
   loading: state.getIn(["singerInfo", "loading"]),
+  // 根据当前playList的长度来判断底部bottom是否要给mini播放器腾出位置
+  songsCount: state.getIn(['player','playList']).size
 });
 
 // 映射dispatch到props上
