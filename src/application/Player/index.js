@@ -14,6 +14,8 @@ import NormalPlayer from './normalPlayer/index.js'
 import { isEmptyObject, getSongUrl, shuffle, findIndex } from "../../api/utils";
 import Toast from '../../baseUI/Toast/index.js'
 import { playMode } from '../../api/config'
+import PlayList from './play-list/index.js'
+
 
 function Player(props) {
   const audioRef = useRef()
@@ -36,6 +38,7 @@ function Player(props) {
     changeCurrentDispatch, // 改变当前播放歌曲
     changePlayListDispatch,// 改变playList
     changeModeDispatch,// 改变mode
+    togglePlayListDispatch // 改变的播放列表的展示与否
   } = props
 
 
@@ -76,6 +79,7 @@ function Player(props) {
     togglePlayingDispatch(true); // 播放状态
     setCurrentTime(0); // 从头开始播放
     setDuration((current.dt / 1000) | 0); // 时长
+    // eslint-disable-next-line
   },[playList, currentIndex])
 
 
@@ -198,6 +202,7 @@ function Player(props) {
           percent={percent}
           toggleFullScreen={toggleFullScreenDispatch}
           clickPlaying={clickPlaying}
+          togglePlayList={togglePlayListDispatch}
         />
       }
       {
@@ -216,6 +221,7 @@ function Player(props) {
           handleNext={handleNext} // 播放下一首的逻辑
           mode={mode} // 播放模式
           changeMode={changeMode} // 改变播放模式
+          togglePlayList={togglePlayListDispatch} // 修改播放列表的展示
         />
       }
       <audio
@@ -224,6 +230,7 @@ function Player(props) {
         onEnded={handleEnd} // 播放器播放完毕一首歌的处理函数
         onError={handleError} // 播放出错的处理函数
       />
+      <PlayList></PlayList>
       <Toast text={modeText} ref={toastRef}></Toast>
     </div>
 	)

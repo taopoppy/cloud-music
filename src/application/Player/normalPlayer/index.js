@@ -17,10 +17,24 @@ import {
 } from "./style";
 
 function NormalPlayer(props) {
-	// 歌曲信息，是否全屏，播放状态，播放进度百分比，总时长，当前播放到什么时间,播放模式
-	const { song, fullScreen, playing, percent, duration, currentTime,mode } = props;
-	// 修改全屏，点击播放或者暂停， 拖动进度条, 上一首歌曲点击事件，下一首歌曲点击事件
-	const { toggleFullScreen,clickPlaying, onProgressChange, handlePrev, handleNext, changeMode } = props
+	const {
+		song, // 歌曲信息
+		fullScreen, // 是否全屏
+		playing,// 播放状态
+		percent,// 播放进度百分比
+		duration,// 总时长
+		currentTime,// 当前播放到什么时间
+		mode// 播放模式
+	} = props;
+	const {
+		toggleFullScreen, // 切换全屏
+		togglePlayList, // 是否显示播放列表
+		clickPlaying,// 点击播放或者暂停
+		onProgressChange,// 拖动进度条
+		handlePrev,// 上一首歌曲点击事件
+		handleNext,// 下一首歌曲点击事件
+		changeMode// 修改播放模式
+	} = props
 
 	const normalPlayerRef = useRef();
 	const cdWrapperRef = useRef();
@@ -187,7 +201,7 @@ function NormalPlayer(props) {
 						<div className="icon i-right" onClick={handleNext}>
 							<i className="iconfont">&#xe718;</i>
 						</div>
-						<div className="icon i-right">
+						<div className="icon i-right" onClick={() => togglePlayList(true)}>
 							<i className="iconfont">&#xe640;</i>
 						</div>
 					</Operators>

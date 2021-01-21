@@ -7,11 +7,18 @@ import ProgressCircle from '../../../baseUI/progress-circle/index.js'
 function MiniPlayer (props) {
   // song是当前播放歌曲信息， fullScreen是当前是否为全屏模式，playing是当前播放状态，percent是播放进度数据
   const { song, fullScreen, playing, percent  } = props; 
-  // 切换mini屏和全屏的函数
-  const { toggleFullScreen } = props
+  // 切换mini屏和全屏的函数，切换是否显示播放列表的函数
+  const { toggleFullScreen, togglePlayList } = props
   // clickPlaying是mini播放器当中的播放和暂停的按钮点击函数
   const { clickPlaying, setFullScreen } = props;
 	const miniPlayerRef = useRef();
+
+  // 点击显示播放列表
+  const handleTogglePlayList = (e) => {
+    togglePlayList(true);
+    e.stopPropagation(); // 因为mini本身也是可以点击的，所以禁止点击冒泡
+  };
+
 
   return (
 		<CSSTransition
@@ -44,7 +51,7 @@ function MiniPlayer (props) {
           }
           </ProgressCircle>
         </div>
-        <div className="control">
+        <div className="control" onClick={handleTogglePlayList}>
           <i className="iconfont">&#xe640;</i>
         </div>
       </MiniPlayerContainer>
